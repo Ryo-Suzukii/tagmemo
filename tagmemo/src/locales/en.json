@@ -1,0 +1,11 @@
+{
+    "select_language": "Select language",
+    "login": "Login",
+    "logout": "Logout",
+    "sign_up": "Sign up",
+    "tagmemo_description_1": "Let's graduate from \"Where did I write it?\"",
+    "tagmemo_description_2": "automatically tags and makes it easy to search for notes.",
+    "login_description": "Let's login to use TagMemo.",
+    "settings": "Settings",
+    "settings_description": "Change account settings. (Login required)"
+}

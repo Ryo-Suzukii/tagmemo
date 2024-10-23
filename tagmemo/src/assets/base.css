@@ -1,27 +1,27 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* 新しいカラーパレット */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --vt-c-white: #e0f0ff;
+  --vt-c-white-soft: #d0e8ff;
+  --vt-c-white-mute: #b0d0ff;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  --vt-c-black: #0a2239;
+  --vt-c-black-soft: #0d2a4d;
+  --vt-c-black-mute: #123a67;
 
-  --vt-c-indigo: #2c3e50;
+  --vt-c-indigo: #164c7e;
 
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
   --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  --vt-c-divider-dark-1: rgba(255, 255, 255, 0.65);
+  --vt-c-divider-dark-2: rgba(255, 255, 255, 0.48);
 
   --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
+  --vt-c-text-light-2: rgba(22, 76, 126, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  --vt-c-text-dark-2: rgba(224, 240, 255, 0.64);
 }
 
-/* semantic color variables for this project */
+/* プロジェクト用のセマンティックカラー */
 :root {
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
@@ -50,6 +50,7 @@
   }
 }
 
+/* 基本スタイル */
 *,
 *::before,
 *::after {
@@ -83,4 +84,39 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* テキストのカスタマイズ */
+h1, h2, h3 {
+  color: var(--color-heading);
+}
+
+a {
+  color: var(--vt-c-indigo);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--vt-c-black-soft);
+}
+
+/* ボタンスタイル */
+button {
+  background-color: var(--vt-c-indigo);
+  color: var(--vt-c-white);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--vt-c-black-soft);
+}
+
+/* セクションごとの余白調整 */
+section {
+  margin-bottom: var(--section-gap);
 }

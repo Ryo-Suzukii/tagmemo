@@ -7,14 +7,8 @@ import HederView from './components/HeaderView.vue'
   <header>
     <div class="wrapper">
       <HederView/>
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
     </div>
   </header>
-
   <RouterView />
 </template>
 
@@ -31,7 +25,7 @@ header {
 
 nav {
   width: 100%;
-  font-size: 12px;
+  font-size: 20px;
   text-align: center;
   margin-top: 2rem;
 }
