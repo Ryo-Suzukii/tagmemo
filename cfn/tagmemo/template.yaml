@@ -1,0 +1,133 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Region:
+    Type: String
+    Default: ane1
+  EnvironmentPrefix:
+    Type: String
+  CategoryName:
+    Type: String
+    Default: data
+  AppName:
+    Type: String
+    Default: tagmemo-api
+  LogLevel:
+    Type: String
+    Default: DEBUG
+    AllowedValues:
+      - DEBUG
+      - INFO
+      - WARN
+  Timeout:
+    Type: Number
+    Default: 900
+
+Globals:
+  Function:
+    Architectures:
+      - arm64
+    Runtime: python3.12
+    Handler: app.lambda_function.lambda_handler
+    Timeout: !Ref Timeout
+    Layers:
+      - !Sub arn:aws:lambda:${AWS::Region}:017000801446:layer:AWSLambdaPowertoolsPythonV2-Arm64:60
+      - !Sub arn:aws:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python312-Arm64:3
+    LoggingConfig:
+      LogFormat: JSON
+      SystemLogLevel: !Ref LogLevel
+      ApplicationLogLevel: !Ref LogLevel
+
+Resources:
+  FunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - apigateway:*
+                Resource: "*"
+
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub ${EnvironmentPrefix}-${AppName}-apigateway
+
+  ApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: !Sub ${EnvironmentPrefix}-${AppName}-Function-Auth
+    DependsOn: ApiGateway
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt Function.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/GET/${EnvironmentPrefix}-${AppName}-Function-Auth
+    DependsOn: [Function, ApiGateway]
+
+  ApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ResourceId: !Ref ApiResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations
+    DependsOn: [ApiResource, LambdaInvokePermission]
+
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref ApiGateway
+      StageName: live
+    DependsOn: ApiMethod
+
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${EnvironmentPrefix}-${AppName}-Function-Auth
+      MemorySize: 1024
+      CodeUri: ./src
+      LoggingConfig:
+        LogFormat: JSON
+        SystemLogLevel: !Ref LogLevel
+        ApplicationLogLevel: !Ref LogLevel
+      Role: !GetAtt FunctionRole.Arn
+      AutoPublishAlias: live
+    Events:
+      ApiEvent:
+        Type: Api
+        Properties:
+          RestApiId: !Ref ApiGateway
+
+  FunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${EnvironmentPrefix}-${AppName}-Function-Auth
+      RetentionInDays: 90
