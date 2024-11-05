@@ -1,0 +1,8 @@
+{
+    "Parameters": {
+        "EnvironmentPrefix": "dev"
+    },
+    "ParameterStore": {
+
+    }
+}
