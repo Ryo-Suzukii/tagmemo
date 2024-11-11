@@ -1,83 +1,61 @@
-<template>
-  <canvas ref="canvas" class="starry-background"></canvas>
-</template>
+<script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
 
-<script lang="ts">
-export default {
-  mounted() {
-    this.createStarryAnimation();
-  },
-  methods: {
-    createStarryAnimation() {
-      const canvas = this.$refs.canvas as HTMLCanvasElement;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        console.error("Failed to get 2D context");
-        return;
-      }
-      let width = window.innerWidth;
-      let height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+function createStars() {
+  const starryBg = document.querySelector('.starry-bg');
+  if (!starryBg) return;
 
-      const stars = Array(200).fill({}).map(() => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 2 + 1,
-        speed: Math.random() * 0.5 + 0.2,
-        alpha: Math.random(),
-      }));
+  // 通常の星を作成
+  for (let i = 0; i < 200; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = `${Math.random() * 100}%`;
+    star.style.top = `${Math.random() * 100}%`;
+    star.style.width = `${Math.random() * 3}px`;
+    star.style.height = star.style.width;
+    star.style.animationDelay = `${Math.random() * 2}s`;
+    starryBg.appendChild(star);
+  }
+}
 
-      function drawStars() {
-        if (ctx) {
-          ctx.clearRect(0, 0, width, height);
-        }
-        stars.forEach(star => {
-          if (ctx) {
-            ctx.beginPath();
-            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
-            ctx.fill();
-          }
-        });
-      }
+function createShootingStar() {
+  const starryBg = document.querySelector('.starry-bg');
+  if (!starryBg) return;
 
-      function updateStars() {
-        stars.forEach(star => {
-          star.y += star.speed;
-          if (star.y > height) {
-            star.y = 0;
-            star.x = Math.random() * width;
-          }
-        });
-      }
+  const shootingStar = document.createElement('div');
+  shootingStar.className = 'shooting-star';
+  
+  shootingStar.style.left = `${Math.random() * 100}%`;
+  shootingStar.style.top = `${Math.random() * 20}%`;
+  
+  starryBg.appendChild(shootingStar);
 
-      function animate() {
-        updateStars();
-        drawStars();
-        requestAnimationFrame(animate);
-      }
+  shootingStar.addEventListener('animationend', () => {
+    shootingStar.remove();
+  });
+}
 
-      animate();
+let shootingStarInterval: number;
 
-      window.addEventListener("resize", () => {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
-      });
-    },
-  },
-};
+onMounted(() => {
+  createStars();
+  
+  const createRandomShootingStar = () => {
+    createShootingStar();
+    const nextInterval = 5000 + Math.random() * 10000;
+    shootingStarInterval = window.setTimeout(createRandomShootingStar, nextInterval);
+  };
+  
+  createRandomShootingStar();
+});
+
+onUnmounted(() => {
+  if (shootingStarInterval) {
+    clearTimeout(shootingStarInterval);
+  }
+});
 </script>
 
-<style>
-.starry-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-</style>
+<template>
+  <div class="starry-bg"></div>
+</template>

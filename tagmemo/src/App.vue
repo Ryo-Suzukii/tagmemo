@@ -1,86 +1,52 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import HederView from './components/HeaderView.vue'
-import StarryBackGround from './components/StarryBackGround.vue'
-</script>
+import { useI18n } from 'vue-i18n';
+import StarryBackground from './components/StarryBackground.vue';
 
-<script lang="ts">
-export default {
-  components: {
-    StarryBackGround
-  }
-}
+const { locale } = useI18n();
+
+const changeLanguage = (lang: string) => {
+  locale.value = lang;
+};
 </script>
 
 <template>
-  <StarryBackGround />
-  <header>
-    <div class="wrapper">
-      <HederView/>
-    </div>
-  </header>
-  <RouterView />
+  <StarryBackground />
+  <nav class="nav-links">
+    <router-link to="/">Home</router-link>
+    <router-link to="/login">Login</router-link>
+    <router-link to="/register">Register</router-link>
+    <select @change="event => changeLanguage((event.target as HTMLSelectElement)?.value ?? '')">
+      <option value="ja">日本語</option>
+      <option value="en">English</option>
+    </select>
+  </nav>
+  <router-view></router-view>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+select {
+  margin-left: auto;
+  padding: 0.3rem;
+  border-radius: 4px;
+  background-color: #2b2b2b;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+select:focus {
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
-nav {
-  width: 100%;
-  font-size: 20px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+select option {
+  background-color: #2b2b2b;
+  color: #ffffff;
 }
 </style>

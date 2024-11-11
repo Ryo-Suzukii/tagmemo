@@ -1,11 +1,10 @@
-{
-    "select_language": "言語を選択",
-    "login": "ログイン",
-    "logout": "ログアウト",
-    "sign_up": "新規登録",
-    "tagmemo_description_1": "を使って「どこに書いたっけ？」から卒業しましょう",
-    "tagmemo_description_2": "は、タグ付けを自動で行い、メモを検索しやすくします",
-    "login_description": "ログインしてタグメモを使いましょう",
-    "settings": "設定",
-    "settings_description": "アカウントの設定を行います。(ログインが必要です)"
-}
+    {
+        "title": "TagMemo",
+        "description": "あのメモどこだっけ...から卒業しよう✨",
+        "login": "ログイン",
+        "mail": "メールアドレス",
+        "password": "パスワード",
+        "re_password": "パスワード (確認)",
+        "register": "アカウント登録",
+        "username": "ユーザー名"
+    }

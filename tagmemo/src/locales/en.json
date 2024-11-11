@@ -1,11 +1,11 @@
 {
-    "select_language": "Select language",
+    "title": "TagMemo",
+    "description": "Let's graduate from 'Where is that memo...?'✨",
     "login": "Login",
-    "logout": "Logout",
-    "sign_up": "Sign up",
-    "tagmemo_description_1": "Let's graduate from \"Where did I write it?\"",
-    "tagmemo_description_2": "automatically tags and makes it easy to search for notes.",
-    "login_description": "Let's login to use TagMemo.",
-    "settings": "Settings",
-    "settings_description": "Change account settings. (Login required)"
+    "mail": "Email",
+    "password": "Password",
+    "re_password": "Password(Confirm)",
+    "register": "Register",
+    "username": "Username"
+
 }
