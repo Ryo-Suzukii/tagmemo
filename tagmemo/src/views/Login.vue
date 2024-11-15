@@ -35,6 +35,7 @@ const handleLogin = () => {
       } else if (response.status == 200) {
         authData.isError = false;
         authData.isLogin = true;
+        window.location.href = '/';
       } else {
         authData.isLogin = false;
         authData.isError = true;

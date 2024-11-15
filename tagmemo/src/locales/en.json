@@ -6,6 +6,17 @@
     "password": "Password",
     "re_password": "Password(Confirm)",
     "register": "Register",
-    "username": "Username"
-
+    "username": "Username",
+    "loginPage": {
+        "success": "Login successful",
+        "error": "Incorrect email or password"
+    },
+    "AccountPage": {
+        "statusLogin": "Account currently logged in",
+        "statusNotLogin": "Not currently logged in"
+    },
+    "NotFoundPage": {
+        "title": "404 Not Found",
+        "description": "The page you are looking for was not found"
+    }
 }

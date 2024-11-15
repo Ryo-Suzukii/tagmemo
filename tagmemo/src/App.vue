@@ -15,6 +15,7 @@ const changeLanguage = (lang: string) => {
     <router-link to="/">Home</router-link>
     <router-link to="/login">Login</router-link>
     <router-link to="/register">Register</router-link>
+    <router-link to="/account">Account</router-link>
     <select @change="event => changeLanguage((event.target as HTMLSelectElement)?.value ?? '')" id="changeLanguage" name="changeLanguage">
       <option value="ja">日本語</option>
       <option value="en">English</option>

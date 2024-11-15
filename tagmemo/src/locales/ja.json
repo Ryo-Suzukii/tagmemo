@@ -1,14 +1,22 @@
-    {
-        "title": "TagMemo",
-        "description": "あのメモどこだっけ...から卒業しよう✨",
-        "login": "ログイン",
-        "mail": "メールアドレス",
-        "password": "パスワード",
-        "re_password": "パスワード (確認)",
-        "register": "アカウント登録",
-        "username": "ユーザー名",
-        "loginPage": {
-            "success": "ログインに成功しました",
-            "error": "メールアドレスまたはパスワードが違います"
-        }
+{
+    "title": "TagMemo",
+    "description": "あのメモどこだっけ...から卒業しよう✨",
+    "login": "ログイン",
+    "mail": "メールアドレス",
+    "password": "パスワード",
+    "re_password": "パスワード (確認)",
+    "register": "アカウント登録",
+    "username": "ユーザー名",
+    "loginPage": {
+        "success": "ログインに成功しました",
+        "error": "メールアドレスまたはパスワードが違います"
+    },
+    "AccountPage": {
+        "statusLogin": "現在ログイン中のアカウント",
+        "statusNotLogin": "現在ログインしていません"
+    },
+    "NotFoundPage": {
+        "title": "404 Not Found",
+        "description": "お探しのページが見つかりませんでした"
     }
+}
