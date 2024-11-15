@@ -13,7 +13,8 @@
     },
     "AccountPage": {
         "statusLogin": "現在ログイン中のアカウント",
-        "statusNotLogin": "現在ログインしていません"
+        "statusNotLogin": "現在ログインしていません",
+        "logout": "ログアウト"
     },
     "NotFoundPage": {
         "title": "404 Not Found",

@@ -9,6 +9,9 @@ const { t } = useI18n();
 <template>
   <div class="page-container" v-if="authData.isLogin">
     <h2>{{  t("AccountPage.statusLogin") }}</h2>
+    <p>{{ authData.email }}</p>
+    <button @click="authData.logout()">{{ t("AccountPage.logout") }}</button>
+
   </div>
   <div class="page-container" v-if="!authData.isLogin">
     <h2>{{ t("AccountPage.statusNotLogin")}}</h2>
@@ -20,6 +23,7 @@ const { t } = useI18n();
 
 <style scoped>
 button {
+  margin-top: 5%;
   width: 100%;
   padding: 0.75rem;
   background: #646cff;

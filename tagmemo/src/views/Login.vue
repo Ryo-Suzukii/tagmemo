@@ -2,11 +2,13 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAuthData } from '../components/AuthCommon.vue';
+import { useRouter } from 'vue-router';
 
 const { t } = useI18n();
 const isError = ref(false);
 const isLogin = ref(false);
 const authData = useAuthData();
+const router = useRouter();
 
 const handleLogin = () => {
   const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
@@ -35,7 +37,8 @@ const handleLogin = () => {
       } else if (response.status == 200) {
         authData.isError = false;
         authData.isLogin = true;
-        window.location.href = '/';
+        authData.email = email;
+        router.push({ name: 'home' });
       } else {
         authData.isLogin = false;
         authData.isError = true;
