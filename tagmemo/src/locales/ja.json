@@ -6,5 +6,9 @@
         "password": "パスワード",
         "re_password": "パスワード (確認)",
         "register": "アカウント登録",
-        "username": "ユーザー名"
+        "username": "ユーザー名",
+        "loginPage": {
+            "success": "ログインに成功しました",
+            "error": "メールアドレスまたはパスワードが違います"
+        }
     }
