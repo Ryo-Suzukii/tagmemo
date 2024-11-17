@@ -40,8 +40,16 @@ def set_auth_info(params: dict[str, str]) -> dict[str, str]:
     )
 
 
+def login(
+    auth_data: dict[str, str],
+    mail_address: str,
+    password: str,
+) -> bool:
+    return bool(auth_data["mail_address"] == mail_address and auth_data["password"] == password)
+
+
 def check_auth_info(auth_data: dict[str, str]) -> bool:
-    requires = ["mail_address", "password", "user_id"]
+    requires = ["mail_address", "password", "mode"]
     mail_address = auth_data.get("mail_address", "")
     email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     if not re.match(email_pattern, mail_address):
@@ -57,13 +65,24 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
     logger.info({"lambda_handler": "neko", "event": event, "context": context})
     params = event.get("queryStringParameters")
 
-    if not check_auth_info(params):
+    if params is None or not check_auth_info(params):
         return {
             "statusCode": 400,
-            "body": json.dumps({"message": "You must provide query parameters.[mail_address, password, user_id]"}),
+            "body": json.dumps({"message": "You must provide query parameters.[mail_address, password, mode]"}),
         }
 
     auth_data = get_auth_info(params)
+    if params and params["mode"] == "login":
+        is_login = login(auth_data, params["mail_address"], params["password"])
+        if is_login:
+            return {
+                "statusCode": 200,
+                "body": json.dumps({"message": f"{auth_data.get('mail_address')} is login."}),
+            }
+        return {
+            "statusCode": 301,
+            "body": json.dumps({"message": f"{auth_data.get('mail_address')} is not login."}),
+        }
     if not auth_data:
         set_res = set_auth_info(params)
         logger.info({"set_res": set_res})
