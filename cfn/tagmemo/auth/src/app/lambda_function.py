@@ -77,7 +77,12 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
         if is_login:
             return {
                 "statusCode": 200,
-                "body": json.dumps({"message": f"{auth_data.get('mail_address')} is login."}),
+                "body": json.dumps(
+                    {
+                        "message": f"{auth_data.get('mail_address')} is login.",
+                        "user_id": auth_data.get("user_id"),
+                    },
+                ),
             }
         return {
             "statusCode": 301,

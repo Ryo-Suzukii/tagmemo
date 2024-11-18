@@ -1,9 +1,56 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { useAuthData } from '../components/AuthCommon.vue';
+import { useRouter } from 'vue-router';
+
 const { t } = useI18n();
+const authData = useAuthData();
+const router = useRouter();
 const handleRegister = () => {
-  // 登録処理をここに実装
-  console.log('登録処理');
+  const userNameInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+  const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
+  const passwordInput = document.querySelectorAll('input[type="password"]')[0] as HTMLInputElement;
+  const rePasswordInput = document.querySelectorAll('input[type="password"]')[1] as HTMLInputElement;
+  const userName = userNameInput.value;
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  const rePassword = rePasswordInput.value;
+  if (password !== rePassword) {
+    alert('Password does not match');
+    return;
+  }
+  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + userName + '&mail_address=' + email + '&password=' + password + '&mode=register';
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+  myHeaders.append("Host", "6f5dgikzng.execute-api.ap-northeast-1.amazonaws.com");
+  myHeaders.append("Connection", "keep-alive");
+  myHeaders.append("Access-Control-Allow-Origin", "*");
+
+  var requestOptions: RequestInit = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow' as RequestRedirect,
+  };
+
+  fetch(url, requestOptions)
+    .then(response => {
+      if (response.status == 401) {
+        alert('Registration failed [401]');
+      } else if (response.status == 200) {
+        authData.isError = false;
+        authData.isLogin = true;
+        authData.isLoginCheck = true;
+        setTimeout(() => {
+          authData.isLoginCheck = false;
+        }, 3000);
+        authData.email = email;
+        authData.user_id = userName;
+        router.push({ name: 'home' });
+      } else {
+        alert(`Registration failed ${response.status}`);
+      }
+    })
 };
 </script>
 

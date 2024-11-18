@@ -13,6 +13,15 @@ const { t } = useI18n();
     <p>ねこちゃん</p>
   </div>
   <div class="page-container" v-if="authData.isLogin">
+    <h1>{{ authData.user_id }}さん！</h1>
     <h1>ようこそ{{ t("title") }}へ！</h1>
   </div>
 </template>
+
+<style scoped>
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;}
+</style>

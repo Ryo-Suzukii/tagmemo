@@ -19,6 +19,17 @@ const authData = useAuthData();
       >
       {{ t("loginPage.error") }}
     </v-alert>
+    <v-alert
+      v-if="authData.isLoginCheck"
+      title="Login Successful"
+      icon="$success"
+      type="success"
+      closable
+      @click:close="authData.isLogin = false"
+      icon-color="white"
+      >
+      {{ t("loginPage.success") }}
+    </v-alert>
   </div>
 </template>
 

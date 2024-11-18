@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router';
 const { t } = useI18n();
 const authData = useAuthData();
 const router = useRouter();
+const enc = new TextDecoder('utf-8');
 
 const handleLogin = () => {
   const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
@@ -36,12 +37,26 @@ const handleLogin = () => {
           authData.isError = false;
         }, 3000);
       } else if (response.status == 200) {
+        if (response.body) {
+          response.body.getReader().read().then(({ value, done }) => {
+            if (!done && value) {
+              const body = new Uint8Array(value.buffer);
+              const data = JSON.parse(enc.decode(body));
+              authData.user_id = data.user_id;
+            }
+          });
+        }
         authData.isError = false;
         authData.isLogin = true;
+        authData.isLoginCheck = true;
         authData.email = email;
+        setTimeout(() => {
+          authData.isLoginCheck = false;
+        }, 3000);
         router.push({ name: 'home' });
       } else {
         authData.isLogin = false;
+        authData.isLoginCheck = false;
         authData.isError = true;
       }
     })
