@@ -84,7 +84,6 @@ Resources:
       RestApiId: !Ref ApiGateway
       ParentId: !GetAtt ApiGateway.RootResourceId
       PathPart: !Sub ${EnvironmentPrefix}-${AppName}-Function
-    DependsOn: ApiGateway
 
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
@@ -93,7 +92,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/GET/${EnvironmentPrefix}-${AppName}-Function
-    DependsOn: [Function, ApiGateway]
 
   ApiMethod:
     Type: AWS::ApiGateway::Method

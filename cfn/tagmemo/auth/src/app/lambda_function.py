@@ -83,14 +83,17 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
             "statusCode": 301,
             "body": json.dumps({"message": f"{auth_data.get('mail_address')} is not login."}),
         }
-    if not auth_data:
-        set_res = set_auth_info(params)
-        logger.info({"set_res": set_res})
-        auth_data = get_auth_info(params)
-    else:
+
+    if params and params["mode"] == "register":
+        if auth_data:
+            return {
+                "statusCode": 301,
+                "body": json.dumps({"message": f"{auth_data.get('mail_address')} is Already registered."}),
+            }
+        set_auth_info(params)
         return {
             "statusCode": 200,
-            "body": json.dumps({"message": f"{auth_data.get('mail_address')} is Already registered."}),
+            "body": json.dumps({"message": f"{params.get('mail_address')} is registered."}),
         }
     return {
         "statusCode": 200,
