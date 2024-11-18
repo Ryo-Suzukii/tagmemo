@@ -42,7 +42,9 @@ const handleLogin = () => {
             if (!done && value) {
               const body = new Uint8Array(value.buffer);
               const data = JSON.parse(enc.decode(body));
-              authData.user_id = data.user_id;
+              authData.userId = data.user_id;
+              authData.userColor = `#${data.user_color}`;
+              console.log(authData.userColor);
             }
           });
         }

@@ -8,7 +8,9 @@ export const useAuthData = defineStore("authData", {
     isLogin: useStorage('authData_isLogin', false),
     isLoginCheck: useStorage('authData_isLoginCheck', false),
     email: useStorage('authData_email', ""),
-    user_id: useStorage('authData_user_id', ""),
+    userId: useStorage('authData_user_id', ""),
+    userColor: useStorage('authData_userColor', ""),
+    showMenu: false,
   }),
   actions: {
     logout() {
@@ -16,7 +18,8 @@ export const useAuthData = defineStore("authData", {
       this.isLogin = false;
       this.isLoginCheck = false;
       this.email = "";
-      this.user_id = "";
+      this.userId = "";
+      this.userColor = "";
     },
   },
 })

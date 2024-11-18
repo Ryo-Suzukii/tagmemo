@@ -35,6 +35,7 @@ def set_auth_info(params: dict[str, str]) -> dict[str, str]:
             "mail_address": {"S": params["mail_address"]},
             "password": {"S": params["password"]},
             "user_id": {"S": params["user_id"]},
+            "user_color": {"S": params["color"]},
             "created_at": {"S": pd.Timestamp.now(tz=datetime.UTC).strftime("%Y-%m-%d %H:%M:%S")},
         },
     )
@@ -81,6 +82,7 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
                     {
                         "message": f"{auth_data.get('mail_address')} is login.",
                         "user_id": auth_data.get("user_id"),
+                        "user_color": auth_data.get("user_color"),
                     },
                 ),
             }

@@ -13,7 +13,7 @@ const { t } = useI18n();
     <p>ねこちゃん</p>
   </div>
   <div class="page-container" v-if="authData.isLogin">
-    <h1>{{ authData.user_id }}さん！</h1>
+    <h1>{{ authData.userId }}さん！</h1>
     <h1>ようこそ{{ t("title") }}へ！</h1>
   </div>
 </template>

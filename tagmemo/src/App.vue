@@ -4,6 +4,7 @@ import { useAuthData } from './components/AuthCommon.vue';
 
 import StarryBackground from './components/StarryBackGround.vue';
 import Alert from './components/Alert.vue';
+import AccountMenu from './components/AccountMenu.vue';
 
 const { locale } = useI18n();
 const authData = useAuthData();
@@ -11,11 +12,16 @@ const authData = useAuthData();
 const changeLanguage = (lang: string) => {
   locale.value = lang;
 };
+
+const clickMenu = () => {
+  authData.showMenu = true;
+};
 </script>
 
 <template>
   <StarryBackground />
   <Alert />
+  <AccountMenu />
   <nav class="nav-links">
     <router-link to="/">Home</router-link>
     <router-link to="/login">Login</router-link>
@@ -23,7 +29,7 @@ const changeLanguage = (lang: string) => {
     <router-link to="/account">Account</router-link>
   
     <div class="left-container">
-      <h1 class="userData">{{ authData.user_id }}</h1>
+      <h1 class="userData" :style="{ backgroundColor: authData.userColor }" @click="clickMenu">{{ authData.userId[0] }}</h1>
       <select @change="event => changeLanguage((event.target as HTMLSelectElement)?.value ?? '')" id="changeLanguage" name="changeLanguage">
         <option value="ja">日本語</option>
         <option value="en">English</option>
@@ -46,6 +52,18 @@ const changeLanguage = (lang: string) => {
   align-items: center;
   gap: 1rem;
 }
+
+.userData {
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+}
+
 
 select {
   margin-left: auto;

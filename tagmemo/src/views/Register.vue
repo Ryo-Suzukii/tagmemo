@@ -15,11 +15,13 @@ const handleRegister = () => {
   const email = emailInput.value;
   const password = passwordInput.value;
   const rePassword = rePasswordInput.value;
+  const userColor = Math.floor(Math.random() * 16777215).toString(16);
   if (password !== rePassword) {
     alert('Password does not match');
     return;
   }
-  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + userName + '&mail_address=' + email + '&password=' + password + '&mode=register';
+  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + userName + '&mail_address=' + email + '&password=' + password + '&color=' + userColor + '&mode=register';
+  console.log(url);
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
@@ -45,7 +47,9 @@ const handleRegister = () => {
           authData.isLoginCheck = false;
         }, 3000);
         authData.email = email;
-        authData.user_id = userName;
+        authData.userId = userName;
+        authData.userColor = userColor;
+        console.log(authData.userColor);
         router.push({ name: 'home' });
       } else {
         alert(`Registration failed ${response.status}`);
