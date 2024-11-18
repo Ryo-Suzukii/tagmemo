@@ -23,13 +23,11 @@ const clickMenu = () => {
   <Alert />
   <AccountMenu />
   <nav class="nav-links">
-    <router-link to="/">Home</router-link>
-    <router-link to="/login">Login</router-link>
-    <router-link to="/register">Register</router-link>
-    <router-link to="/account">Account</router-link>
+    <router-link to="/">Tagmemo</router-link>
   
     <div class="left-container">
       <h1 class="userData" :style="{ backgroundColor: authData.userColor }" @click="clickMenu">{{ authData.userId[0] }}</h1>
+      <h1 class="userData" :style="{ backgroundColor: 'gray'}" @click="clickMenu" v-if="!authData.isLogin">?</h1>
       <select @change="event => changeLanguage((event.target as HTMLSelectElement)?.value ?? '')" id="changeLanguage" name="changeLanguage">
         <option value="ja">日本語</option>
         <option value="en">English</option>

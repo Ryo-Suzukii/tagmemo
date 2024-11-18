@@ -48,7 +48,7 @@ const handleRegister = () => {
         }, 3000);
         authData.email = email;
         authData.userId = userName;
-        authData.userColor = userColor;
+        authData.userColor = `#${userColor}`;
         console.log(authData.userColor);
         router.push({ name: 'home' });
       } else {

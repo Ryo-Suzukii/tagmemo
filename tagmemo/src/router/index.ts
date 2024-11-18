@@ -3,6 +3,7 @@ import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Account from '../views/Account.vue';
+import Profile from '../views/Profile.vue';
 import NotFound from '../views/NotFound.vue';
 
 const router = createRouter({
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/account',
       name: 'account',
       component: Account
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile
     },
     {
       path: "/:pathMatch(.*)*",
