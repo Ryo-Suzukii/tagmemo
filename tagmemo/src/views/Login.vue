@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAuthData } from '../components/AuthCommon.vue';
 import { useRouter } from 'vue-router';
 
 const { t } = useI18n();
-const isError = ref(false);
-const isLogin = ref(false);
 const authData = useAuthData();
 const router = useRouter();
 
@@ -34,6 +31,10 @@ const handleLogin = () => {
       if (response.status == 401) {
         authData.isLogin = false;
         authData.isError = true;
+        setTimeout(() => {
+          authData.isLogin = false;
+          authData.isError = false;
+        }, 3000);
       } else if (response.status == 200) {
         authData.isError = false;
         authData.isLogin = true;
@@ -49,29 +50,6 @@ const handleLogin = () => {
 
 <template>
   <div class="page-container">
-    <v-alert
-      v-if="authData.isError"
-      title="Login Failed"
-      icon="$error"
-      type="error"
-      closable
-      @click:close="isError = false"
-      icon-color="white"
-      >
-      {{ t("loginPage.error") }}
-    </v-alert>
-    <v-alert
-    v-if="authData.isLogin"
-    title="Login Success"
-    icon="$success"
-    type="success"
-    variant="tonal"
-    closable
-    @click:close="isLogin = false"
-    icon-color="white"
-    >
-    {{  t("loginPage.success") }}
-  </v-alert>
     <h1>{{ t("login") }}</h1>
     <form @submit.prevent="handleLogin">
       <div class="form-group">

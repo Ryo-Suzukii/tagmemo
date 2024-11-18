@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import StarryBackground from './components/StarryBackground.vue';
+import Alert from './components/Alert.vue';
 
 const { locale } = useI18n();
 
@@ -11,6 +12,7 @@ const changeLanguage = (lang: string) => {
 
 <template>
   <StarryBackground />
+  <Alert />
   <nav class="nav-links">
     <router-link to="/">Home</router-link>
     <router-link to="/login">Login</router-link>
