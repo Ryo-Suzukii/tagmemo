@@ -58,6 +58,11 @@ const handleLogin = () => {
         authData.isLogin = false;
         authData.isLoginCheck = false;
         authData.isError = true;
+        setTimeout(() => {
+          authData.isLogin = false;
+          authData.isLoginCheck = false;
+          authData.isError = false;
+        }, 3000);
       }
     })
   };

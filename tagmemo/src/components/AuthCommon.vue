@@ -1,13 +1,14 @@
 <script lang="ts">
 import { defineStore } from 'pinia';
+import { useStorage } from '@vueuse/core';
 
-export const useAuthData = defineStore("authData",{
+export const useAuthData = defineStore("authData", {
   state: () => ({
-    isError: false,
-    isLogin: false,
-    isLoginCheck: false,
-    email: "",
-    user_id: "",
+    isError: useStorage('authData_isError', false),
+    isLogin: useStorage('authData_isLogin', false),
+    isLoginCheck: useStorage('authData_isLoginCheck', false),
+    email: useStorage('authData_email', ""),
+    user_id: useStorage('authData_user_id', ""),
   }),
   actions: {
     logout() {

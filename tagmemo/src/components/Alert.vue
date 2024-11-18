@@ -36,8 +36,8 @@ const authData = useAuthData();
 <style scoped>
 .alert-container {
   position: fixed;
-  margin-top: 10%;
-  margin-left: 65%;
+  margin-top: 8%;
+  margin-left: 70%;
   z-index: 1000;
   max-width: 400px;
 }

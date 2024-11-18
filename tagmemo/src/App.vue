@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import StarryBackground from './components/StarryBackground.vue';
+import { useAuthData } from './components/AuthCommon.vue';
+
+import StarryBackground from './components/StarryBackGround.vue';
 import Alert from './components/Alert.vue';
 
 const { locale } = useI18n();
+const authData = useAuthData();
 
 const changeLanguage = (lang: string) => {
   locale.value = lang;
@@ -18,10 +21,14 @@ const changeLanguage = (lang: string) => {
     <router-link to="/login">Login</router-link>
     <router-link to="/register">Register</router-link>
     <router-link to="/account">Account</router-link>
-    <select @change="event => changeLanguage((event.target as HTMLSelectElement)?.value ?? '')" id="changeLanguage" name="changeLanguage">
-      <option value="ja">日本語</option>
-      <option value="en">English</option>
-    </select>
+  
+    <div class="left-container">
+      <h1 class="userData">{{ authData.user_id }}</h1>
+      <select @change="event => changeLanguage((event.target as HTMLSelectElement)?.value ?? '')" id="changeLanguage" name="changeLanguage">
+        <option value="ja">日本語</option>
+        <option value="en">English</option>
+      </select>
+    </div>
   </nav>
   <router-view></router-view>
 </template>
@@ -32,6 +39,14 @@ const changeLanguage = (lang: string) => {
   align-items: center;
   gap: 1rem;
 }
+
+.left-container {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 select {
   margin-left: auto;
   padding: 0.3rem;
@@ -42,6 +57,7 @@ select {
   cursor: pointer;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
+
 
 select:focus {
   border-color: #646cff;

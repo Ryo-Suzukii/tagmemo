@@ -5,15 +5,19 @@ function createStars() {
   const starryBg = document.querySelector('.starry-bg');
   if (!starryBg) return;
 
+  const orionBasePoint = {
+    left: 10,
+    top: 10,
+  }
   const orionPoints = [
-    {left: '20%', top: '10%', width: '5px', animationDelay: `${Math.random() * 2}s`},
-    {left: '29%', top: '11%', width: '4px', animationDelay: `${Math.random() * 2}s`},
-    {left: '24%', top: '23%', width: '3px', animationDelay: `${Math.random() * 2}s`},
-    {left: '25%', top: '22.5%', width: '3px', animationDelay: `${Math.random() * 2}s`},
-    {left: '26%', top: '22%', width: '3px',  animationDelay: `${Math.random() * 2}s`},
-    {left: '28%', top: '25%', width: '2px', animationDelay: `${Math.random() * 2}s`},
-    {left: '22%', top: '33%', width: '2px', animationDelay: `${Math.random() * 2}s`},
-    {left: '30%', top: '31%', width: '4px', animationDelay: `${Math.random() * 2}s`},
+    {left: `${orionBasePoint.left + 0}%`, top: `${orionBasePoint.top + 0}%`, width: '5px', animationDelay: `${Math.random() * 2}s`},
+    {left: `${orionBasePoint.left + 9}%`, top: `${orionBasePoint.top + 1}%`, width: '4px', animationDelay: `${Math.random() * 2}s`},
+    {left: `${orionBasePoint.left + 4}%`, top: `${orionBasePoint.top + 13}%`, width: '3px', animationDelay: `${Math.random() * 2}s`},
+    {left: `${orionBasePoint.left + 5}%`, top: `${orionBasePoint.top + 12.5}%`, width: '3px', animationDelay: `${Math.random() * 2}s`},
+    {left: `${orionBasePoint.left + 6}%`, top: `${orionBasePoint.top + 12}%`, width: '3px',  animationDelay: `${Math.random() * 2}s`},
+    {left: `${orionBasePoint.left + 8}%`, top: `${orionBasePoint.top + 15}%`, width: '2px', animationDelay: `${Math.random() * 2}s`},
+    {left: `${orionBasePoint.left + 2}%`, top: `${orionBasePoint.top + 23}%`, width: '2px', animationDelay: `${Math.random() * 2}s`},
+    {left: `${orionBasePoint.left + 10}%`, top: `${orionBasePoint.top + 21}%`, width: '4px', animationDelay: `${Math.random() * 2}s`},
   ]
   for (let i = 0; i < 200; i++) {
     const star = document.createElement('div');
