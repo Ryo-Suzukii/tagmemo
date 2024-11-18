@@ -37,9 +37,21 @@ const authData = useAuthData();
 .alert-container {
   position: fixed;
   margin-top: 8%;
-  margin-left: 70%;
+  margin-left: 80%;
   z-index: 1000;
   max-width: 400px;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .v-alert {
