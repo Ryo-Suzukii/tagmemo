@@ -75,11 +75,11 @@ const handleLogin = () => {
     <h1>{{ t("login") }}</h1>
     <form @submit.prevent="handleLogin">
       <div class="form-group">
-        <label for="email">{{ t("mail")}}</label>
+        <label for="email">{{ t("loginPage.email")}}</label>
         <input type="email" id="email" name="email" autocomplete="email" required />
       </div>
       <div class="form-group">
-        <label for="password">{{ t("password") }}</label>
+        <label for="password">{{ t("loginPage.password") }}</label>
         <input type="password" id="password" name="password" required />
       </div>
       <button type="submit">{{ t("login")}}</button>

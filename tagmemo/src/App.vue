@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
 import { useAuthData } from './components/AuthCommon.vue';
 
 import StarryBackground from './components/StarryBackGround.vue';
 import Alert from './components/Alert.vue';
 import AccountMenu from './components/AccountMenu.vue';
 
-const { locale } = useI18n();
 const authData = useAuthData();
 
-const changeLanguage = (lang: string) => {
-  locale.value = lang;
-};
+
 
 const clickMenu = () => {
   authData.showMenu = true;
@@ -25,13 +21,9 @@ const clickMenu = () => {
   <nav class="nav-links">
     <router-link to="/">Tagmemo</router-link>
   
-    <div class="left-container">
+    <div class="right-container">
       <h1 class="userData" :style="{ backgroundColor: authData.userColor }" @click="clickMenu">{{ authData.userId[0] }}</h1>
       <h1 class="userData" :style="{ backgroundColor: 'gray'}" @click="clickMenu" v-if="!authData.isLogin">?</h1>
-      <select @change="event => changeLanguage((event.target as HTMLSelectElement)?.value ?? '')" id="changeLanguage" name="changeLanguage">
-        <option value="ja">日本語</option>
-        <option value="en">English</option>
-      </select>
     </div>
   </nav>
   <router-view></router-view>
@@ -44,7 +36,7 @@ const clickMenu = () => {
   gap: 1rem;
 }
 
-.left-container {
+.right-container {
   margin-left: auto;
   display: flex;
   align-items: center;
@@ -60,28 +52,5 @@ const clickMenu = () => {
   align-items: center;
   color: white;
   font-size: 2rem;
-}
-
-
-select {
-  margin-left: auto;
-  padding: 0.3rem;
-  border-radius: 4px;
-  background-color: #2b2b2b;
-  color: #ffffff;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-
-select:focus {
-  border-color: #646cff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-}
-
-select option {
-  background-color: #2b2b2b;
-  color: #ffffff;
 }
 </style>

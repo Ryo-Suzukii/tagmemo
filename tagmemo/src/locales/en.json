@@ -1,23 +1,26 @@
 {
     "title": "TagMemo",
-    "description": "Let's graduate from 'Where is that memo...?'✨",
     "login": "Login",
-    "mail": "Email",
-    "password": "Password",
-    "re_password": "Password(Confirm)",
-    "register": "Register",
-    "username": "Username",
+    "description": "Let's graduate from 'Where is that memo...?'✨",
+    "accountMenuPage": {
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Logout",
+        "register": "Register"
+    },
+    "homePage": {
+        "welcome": "Welcome to TagMemo!",
+        "description": "Let's graduate from 'Where is that memo...?'✨"
+    },
     "loginPage": {
-        "success": "Login successful",
-        "error": "Incorrect email or password"
+        "email": "Email",
+        "password": "Password"
     },
-    "AccountPage": {
-        "statusLogin": "Account currently logged in",
-        "statusNotLogin": "Not currently logged in",
-        "logout": "Logout"
-    },
-    "NotFoundPage": {
-        "title": "404 Not Found",
-        "description": "The page you are looking for was not found"
+    "registerPage": {
+        "register": "Register",
+        "username": "Username",
+        "email": "Email",
+        "password": "Password",
+        "re_password": "Password (Re-enter)"
     }
 }

@@ -10,11 +10,11 @@ const { t } = useI18n();
   <div class="page-container" v-if="!authData.isLogin">
     <h1>{{ t("title")}}</h1>
     <!-- <p>{{ t("description") }}</p> -->
-    <p>ねこちゃん</p>
+    <p>{{ t("homePage.description") }}</p>
   </div>
   <div class="page-container" v-if="authData.isLogin">
-    <h1>{{ authData.userId }}さん！</h1>
-    <h1>ようこそ{{ t("title") }}へ！</h1>
+    <h1>{{ authData.userId }}</h1>
+    <h1>{{ t("homePage.welcome") }}</h1>
   </div>
 </template>
 

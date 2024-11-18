@@ -60,25 +60,25 @@ const handleRegister = () => {
 
 <template>
   <div class="page-container">
-    <h1>{{ t("register") }}</h1>
+    <h1>{{ t("registerPage.register") }}</h1>
     <form @submit.prevent="handleRegister">
       <div class="form-group">
-        <label>{{  t("username") }}</label>
+        <label>{{  t("registerPage.username") }}</label>
         <input type="text" required />
       </div>
       <div class="form-group">
-        <label>{{  t("mail") }}</label>
+        <label>{{  t("registerPage.email") }}</label>
         <input type="email" required />
       </div>
       <div class="form-group">
-        <label>{{ t("password")}}</label>
+        <label>{{ t("registerPage.password")}}</label>
         <input type="password" required />
       </div>
       <div class="form-group">
-        <label>{{ t("re_password")}}</label>
+        <label>{{ t("registerPage.re_password")}}</label>
         <input type="password" required />
       </div>
-      <button type="submit">{{  t("register") }}</button>
+      <button type="submit">{{  t("registerPage.register") }}</button>
     </form>
   </div>
 </template>

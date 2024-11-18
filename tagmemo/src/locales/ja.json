@@ -1,23 +1,25 @@
 {
     "title": "TagMemo",
-    "description": "あのメモどこだっけ...から卒業しよう✨",
     "login": "ログイン",
-    "mail": "メールアドレス",
-    "password": "パスワード",
-    "re_password": "パスワード (確認)",
-    "register": "アカウント登録",
-    "username": "ユーザー名",
+    "accountMenuPage": {
+        "profile": "プロフィール",
+        "settings": "設定",
+        "logout": "ログアウト",
+        "register": "新規登録"
+    },
+    "homePage": {
+        "welcome": "TagMemoへようこそ！",
+        "description": "あのメモどこだっけ...から卒業しよう✨"
+    },
     "loginPage": {
-        "success": "ログインに成功しました",
-        "error": "メールアドレスまたはパスワードが違います"
+        "email": "メールアドレス",
+        "password": "パスワード"
     },
-    "AccountPage": {
-        "statusLogin": "現在ログイン中のアカウント",
-        "statusNotLogin": "現在ログインしていません",
-        "logout": "ログアウト"
-    },
-    "NotFoundPage": {
-        "title": "404 Not Found",
-        "description": "お探しのページが見つかりませんでした"
+    "registerPage": {
+        "register": "新規登録",
+        "username": "ユーザー名",
+        "email": "メールアドレス",
+        "password": "パスワード",
+        "re_password": "パスワード（再入力）"
     }
 }
