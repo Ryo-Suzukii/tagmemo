@@ -5,20 +5,49 @@ import { useAuthData } from "../components/AuthCommon.vue";
 
 const authData = useAuthData();
 const { t } = useI18n();
-const memoData = ref([
-  {
-    title: "Memo Title 1",
-    date: "2024-01-01",
-    tags: ["Tag1", "Tag2", "Tag3"],
-    content: "Memo Content 1",
-  },
-  {
-    title: "Memo Title 2",
-    date: "2024-09-02",
-    tags: ["Tag4", "Tag5", "Tag6"],
-    content: "Memo Content 2",
-  },
-]);
+const enc = new TextDecoder("utf-8");
+const memoData = ref([]);
+
+const handleLogin = () => {
+  console.log(authData.userId);
+  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=get';
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+  myHeaders.append("Host", "6f5dgikzng.execute-api.ap-northeast-1.amazonaws.com");
+  myHeaders.append("Connection", "keep-alive");
+  myHeaders.append("Access-Control-Allow-Origin", "*");
+
+  var requestOptions: RequestInit = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow' as RequestRedirect,
+  };
+
+  fetch(url, requestOptions)
+    .then(response => {
+      if (response.status == 401) {
+        console.log('error');
+      } else if (response.status == 200) {
+        if (response.body) {
+          response.body.getReader().read().then(({ value, done }) => {
+            if (!done && value) {
+              const body = new Uint8Array(value.buffer);
+              const bodyData = JSON.parse(enc.decode(body));
+              for (let i = 0; i < bodyData.length; i++) {
+                bodyData[i].tags = bodyData[i].tags.replace('[', '').replace(']','').split(',');
+              }
+              memoData.value = bodyData;
+              console.log(memoData.value);
+            }
+          });
+        }
+      }
+    })
+  };
+
+handleLogin();
+
 
 interface Memo {
   title: string;

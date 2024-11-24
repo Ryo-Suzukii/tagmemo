@@ -51,7 +51,7 @@ def login(
 
 def check_auth_info(auth_data: dict[str, str]) -> bool:
     auth_requires = ["mail_address", "password", "mode"]
-    memo_requires = ["user_id", "memo_id", "title", "content", "tags"]
+    memo_requires = ["user_id"]
     mode = auth_data.get("mode", "")
     requires = auth_requires if mode in ["login", "register", "delete"] else memo_requires
     if mode in ["login", "register", "delete"]:
