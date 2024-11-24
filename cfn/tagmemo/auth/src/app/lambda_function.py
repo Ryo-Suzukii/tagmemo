@@ -50,12 +50,92 @@ def login(
 
 
 def check_auth_info(auth_data: dict[str, str]) -> bool:
-    requires = ["mail_address", "password", "mode"]
-    mail_address = auth_data.get("mail_address", "")
-    email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-    if not re.match(email_pattern, mail_address):
-        return False
+    auth_requires = ["mail_address", "password", "mode"]
+    memo_requires = ["user_id", "memo_id", "title", "content", "tags"]
+    mode = auth_data.get("mode", "")
+    requires = auth_requires if mode in ["login", "register", "delete"] else memo_requires
+    if mode in ["login", "register", "delete"]:
+        mail_address = auth_data.get("mail_address", "")
+        email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        if not re.match(email_pattern, mail_address):
+            return False
     return all(require in auth_data for require in requires)
+
+
+def login_(
+    auth_data: dict[str, str],
+    params: dict[str, str],
+) -> dict[str, str | int]:
+    is_login = login(auth_data, params["mail_address"], params["password"])
+    if is_login:
+        return {
+            "statusCode": 200,
+            "body": json.dumps(
+                {
+                    "message": f"{auth_data.get('mail_address')} is login.",
+                    "user_id": auth_data.get("user_id"),
+                    "user_color": auth_data.get("user_color"),
+                },
+            ),
+        }
+    return {
+        "statusCode": 301,
+        "body": json.dumps({"message": f"{auth_data.get('mail_address')} is not login."}),
+    }
+
+
+def register_(
+    auth_data: dict[str, str],
+    params: dict[str, str],
+) -> dict[str, str | int]:
+    if auth_data:
+        return {
+            "statusCode": 301,
+            "body": json.dumps({"message": f"{auth_data.get('mail_address')} is Already registered."}),
+        }
+    set_auth_info(params)
+    return {
+        "statusCode": 200,
+        "body": json.dumps({"message": f"{params.get('mail_address')} is registered."}),
+    }
+
+
+def delete_(
+    params: dict[str, str],
+) -> dict[str, str | int]:
+    return {
+        "statusCode": 200,
+        "body": json.dumps({"message": f"{params.get('mail_address')} is deleted."}),
+    }
+
+
+def set_memo_data(
+    params: dict[str, str],
+) -> dict[str, str | int]:
+    return dynamodb.put_item(
+        TableName=f"{Env.ENV}-tagmemo-api-Memo-Data",
+        Item={
+            "user_id": {"S": params["user_id"]},
+            "memo_id": {"S": params["memo_id"]},
+            "title": {"S": params["title"]},
+            "content": {"S": params["content"]},
+            "tags": {"S": params["tags"]},
+            "created_at": {"S": pd.Timestamp.now(tz=datetime.UTC).strftime("%Y-%m-%d %H:%M:%S")},
+        },
+    )
+
+
+def get_memo_data(
+    params: dict[str, str],
+) -> list[dict[str, str]]:
+    data = dynamodb.query(
+        TableName=f"{Env.ENV}-tagmemo-api-Memo-Data",
+        KeyConditionExpression="user_id = :user_id",
+        ExpressionAttributeValues={":user_id": {"S": params["user_id"]}},
+    )
+    if "Items" not in data:
+        return []
+    return [{key: td.deserialize(value) for key, value in item.items()} for item in data["Items"]]
 
 
 # --------------------------------------------------------------------------------------------------
@@ -72,35 +152,31 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
             "body": json.dumps({"message": "You must provide query parameters.[mail_address, password, mode]"}),
         }
 
-    auth_data = get_auth_info(params)
     if params and params["mode"] == "login":
-        is_login = login(auth_data, params["mail_address"], params["password"])
-        if is_login:
-            return {
-                "statusCode": 200,
-                "body": json.dumps(
-                    {
-                        "message": f"{auth_data.get('mail_address')} is login.",
-                        "user_id": auth_data.get("user_id"),
-                        "user_color": auth_data.get("user_color"),
-                    },
-                ),
-            }
-        return {
-            "statusCode": 301,
-            "body": json.dumps({"message": f"{auth_data.get('mail_address')} is not login."}),
-        }
+        auth_data = get_auth_info(params)
+        return login_(auth_data, params)
 
     if params and params["mode"] == "register":
-        if auth_data:
-            return {
-                "statusCode": 301,
-                "body": json.dumps({"message": f"{auth_data.get('mail_address')} is Already registered."}),
-            }
-        set_auth_info(params)
+        auth_data = get_auth_info(params)
+        return register_(auth_data, params)
+
+    if params and params["mode"] == "delete":
+        return delete_(params)
+
+    if params and params["mode"] == "add":
+        memo_data = set_memo_data(params)
+        logger.info({"memo_data": memo_data})
         return {
             "statusCode": 200,
-            "body": json.dumps({"message": f"{params.get('mail_address')} is registered."}),
+            "body": json.dumps(params),
+        }
+
+    if params and params["mode"] == "get":
+        memo_data = get_memo_data(params)
+        logger.info({"memo_data": memo_data})
+        return {
+            "statusCode": 200,
+            "body": json.dumps(memo_data),
         }
     return {
         "statusCode": 200,

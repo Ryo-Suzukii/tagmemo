@@ -84,7 +84,6 @@ Resources:
       RestApiId: !Ref ApiGateway
       ParentId: !GetAtt ApiGateway.RootResourceId
       PathPart: !Sub ${EnvironmentPrefix}-${AppName}-Function-Auth
-    DependsOn: ApiGateway
 
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
@@ -93,7 +92,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/GET/${EnvironmentPrefix}-${AppName}-Function-Auth
-    DependsOn: [Function, ApiGateway]
 
   ApiMethod:
     Type: AWS::ApiGateway::Method
@@ -110,7 +108,7 @@ Resources:
         - StatusCode: 200
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: "'*'"
-    DependsOn: [ApiResource, LambdaInvokePermission]
+    DependsOn: [LambdaInvokePermission]
 
   ApiOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -178,4 +176,20 @@ Resources:
       KeySchema:
         - AttributeName: mail_address
           KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  MemoDynamoDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${EnvironmentPrefix}-${AppName}-Memo-Data
+      AttributeDefinitions:
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: memo_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: user_id
+          KeyType: HASH
+        - AttributeName: memo_id
+          KeyType: RANGE
       BillingMode: PAY_PER_REQUEST
