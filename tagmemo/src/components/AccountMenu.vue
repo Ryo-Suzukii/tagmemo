@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-import { useAuthData } from './AuthCommon.vue';
+import { useAuthData } from '../stores/AuthCommon';
 
 const { locale } = useI18n();
 const { t } = useI18n();

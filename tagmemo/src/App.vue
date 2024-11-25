@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { useAuthData } from './components/AuthCommon.vue';
+import { useAuthData } from './stores/AuthCommon';
 
 import StarryBackground from './components/StarryBackGround.vue';
 import Alert from './components/Alert.vue';
 import AccountMenu from './components/AccountMenu.vue';
 
 const authData = useAuthData();
-
-
 
 const clickMenu = () => {
   authData.showMenu = true;
@@ -22,8 +20,20 @@ const clickMenu = () => {
     <router-link to="/">Tagmemo</router-link>
   
     <div class="right-container">
-      <h1 class="userData" :style="{ backgroundColor: authData.userColor }" @click="clickMenu">{{ authData.userId[0] }}</h1>
-      <h1 class="userData" :style="{ backgroundColor: 'gray'}" @click="clickMenu" v-if="!authData.isLogin">?</h1>
+      <h1 
+        class="userData" 
+        :style="{ backgroundColor: authData.userColor || 'gray' }" 
+        @click="clickMenu"
+        v-if="authData.isLogin && authData.userId">
+        {{ authData.userId[0] }}
+      </h1>
+      <h1 
+        class="userData" 
+        :style="{ backgroundColor: 'gray' }" 
+        @click="clickMenu"
+        v-else>
+        ?
+      </h1>
     </div>
   </nav>
   <router-view></router-view>

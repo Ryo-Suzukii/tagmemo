@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { useAuthData } from '../components/AuthCommon.vue';
-
+import { useAuthData } from '../stores/AuthCommon';
 const authData = useAuthData();
 const { t } = useI18n();
 </script>

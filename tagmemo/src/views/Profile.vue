@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useAuthData } from '../components/AuthCommon.vue';
-
+import { useAuthData } from '../stores/AuthCommon';
 const authData = useAuthData();
 </script>
 

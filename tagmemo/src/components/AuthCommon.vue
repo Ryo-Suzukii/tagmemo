@@ -1,26 +1,12 @@
 <script lang="ts">
-import { defineStore } from 'pinia';
-import { useStorage } from '@vueuse/core';
+import { defineComponent } from 'vue';
+import { useAuthData } from '../stores/AuthCommon';
 
-export const useAuthData = defineStore("authData", {
-  state: () => ({
-    isError: useStorage('authData_isError', false),
-    isLogin: useStorage('authData_isLogin', false),
-    isLoginCheck: useStorage('authData_isLoginCheck', false),
-    email: useStorage('authData_email', ""),
-    userId: useStorage('authData_user_id', ""),
-    userColor: useStorage('authData_userColor', ""),
-    showMenu: false,
-  }),
-  actions: {
-    logout() {
-      this.isError = false;
-      this.isLogin = false;
-      this.isLoginCheck = false;
-      this.email = "";
-      this.userId = "";
-      this.userColor = "";
-    },
+export default defineComponent({
+  name: 'AuthCommon',
+  setup() {
+    const authStore = useAuthData();
+    return { authStore };
   },
-})
+});
 </script>

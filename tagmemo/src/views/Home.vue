@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useAuthData } from "../components/AuthCommon.vue";
 import { useRouter } from "vue-router";
+
+import { useAuthData } from "../stores/AuthCommon";
 
 const authData = useAuthData();
 const { t } = useI18n();
 const enc = new TextDecoder("utf-8");
-const memoData = ref([]);
+const memoData = ref<Memo[]>([]);
 const isLoading = ref(false);
-const router = useRouter();
 
 const handleMemo = (mode: string) => {
   const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=' + mode;
@@ -57,10 +57,10 @@ const handleMemo = (mode: string) => {
     memoId: string,
     title: string,
     date: string,
-    tags: List<string>,
+    tags: Array<string>,
     content: string
   ) => {
-  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=' + mode + '&memo_id=' + memoId + '&title=' + title + '&date=' + date + '&tags=' + tags + '&content=' + content;
+  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + userId + '&mode=' + mode + '&memo_id=' + memoId + '&title=' + title + '&date=' + date + '&tags=' + tags + '&content=' + content;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
@@ -95,21 +95,50 @@ const handleMemo = (mode: string) => {
     })
   };
 
-handleMemo("get");
+  const handleMemoDelete = (memoId: string) => {
+  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=delete' + '&memo_id=' + memoId;
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+  myHeaders.append("Host", "6f5dgikzng.execute-api.ap-northeast-1.amazonaws.com");
+  myHeaders.append("Connection", "keep-alive");
+  myHeaders.append("Access-Control-Allow-Origin", "*");
 
+  var requestOptions: RequestInit = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow' as RequestRedirect,
+  };
+
+  fetch(url, requestOptions)
+    .then(response => {
+      if (response.status == 401) {
+        console.log('error');
+      } else if (response.status == 200) {
+        console.log('success');
+      }
+    })
+  };
+
+handleMemo("get");
 
 interface Memo {
   title: string;
   date: string;
   tags: string[];
   content: string;
+  memo_id: string;
   index?: number;
+  created_at?: string;
 }
 
 const editingMemo = ref<Memo | null>(null);
 
 function startEditing(memoIndex: number) {
-  editingMemo.value = { index: memoIndex, ...memoData.value[memoIndex] };
+  const memo = memoData.value[memoIndex];
+  if (typeof memo === 'object' && memo !== null) {
+    editingMemo.value = { index: memoIndex, ...memo };
+  }
 }
 
 function confirmAndCancelEditing() {
@@ -164,12 +193,14 @@ function createNewMemo() {
     date: new Date().toISOString().split("T")[0],
     tags: [],
     content: "",
+    memo_id: "",
   };
 }
 
-function deleteMemo(index: number) {
+function deleteMemo(index: number, memoId: string) {
   if (window.confirm("このメモを削除してもよろしいですか？")) {
     memoData.value.splice(index, 1);
+    handleMemoDelete(memoId);
   }
 }
 </script>
@@ -198,14 +229,14 @@ function deleteMemo(index: number) {
     >
       <div class="memo-content">
         <h2>{{ memo.title }}</h2>
-        <h3>{{ memo.date }}</h3>
+        <h3>最終更新:{{ memo.created_at }}</h3>
         <div>
             <h4 v-for="(tag, tagIndex) in memo.tags" :key="tagIndex" @click.stop="console.log(tag)">#{{ tag }}</h4>
         </div>
         <p>{{ memo.content }}</p>
         <p style="display: none;">{{ memo.memo_id }}</p>
       </div>
-      <button class="delete-button" @click.stop="deleteMemo(index)">Delete</button>
+      <button class="delete-button" @click.stop="deleteMemo(index, memo.memo_id)">Delete</button>
     </div>
   </div>
 
