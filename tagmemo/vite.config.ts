@@ -17,7 +17,7 @@ export default defineConfig({
       },
     },
   },
-  base: 'https://ryo-suzukii.github.io/tagmemo/',
+  base: '/tagmemo/',
   build: {
     outDir: 'docs',
   },
