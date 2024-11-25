@@ -17,7 +17,7 @@ export default defineConfig({
       },
     },
   },
-  base: '/tagmemo/',
+  base: './',
   build: {
     outDir: 'docs',
   },
