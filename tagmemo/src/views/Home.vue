@@ -2,15 +2,65 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthData } from "../components/AuthCommon.vue";
+import { useRouter } from "vue-router";
 
 const authData = useAuthData();
 const { t } = useI18n();
 const enc = new TextDecoder("utf-8");
 const memoData = ref([]);
+const isLoading = ref(false);
+const router = useRouter();
 
-const handleLogin = () => {
-  console.log(authData.userId);
-  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=get';
+const handleMemo = (mode: string) => {
+  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=' + mode;
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+  myHeaders.append("Host", "6f5dgikzng.execute-api.ap-northeast-1.amazonaws.com");
+  myHeaders.append("Connection", "keep-alive");
+  myHeaders.append("Access-Control-Allow-Origin", "*");
+
+  var requestOptions: RequestInit = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow' as RequestRedirect,
+  };
+
+  isLoading.value = true;
+
+  fetch(url, requestOptions)
+    .then(response => {
+      if (response.status == 401) {
+        console.log('error');
+      } else if (response.status == 200) {
+        if (response.body) {
+          response.body.getReader().read().then(({ value, done }) => {
+            if (!done && value) {
+              const body = new Uint8Array(value.buffer);
+              const bodyData = JSON.parse(enc.decode(body));
+              for (let i = 0; i < bodyData.length; i++) {
+                bodyData[i].tags = bodyData[i].tags.replace('[', '').replace(']','').split(',');
+              }
+              memoData.value = bodyData;
+            }
+          });
+        }
+      }
+    }).finally(() => {
+      isLoading.value = false;
+    });
+  };
+
+  const handleMemoAdd = (
+    mode: string,
+    userId: string,
+    memoId: string,
+    title: string,
+    date: string,
+    tags: List<string>,
+    content: string
+  ) => {
+  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=' + mode + '&memo_id=' + memoId + '&title=' + title + '&date=' + date + '&tags=' + tags + '&content=' + content;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
@@ -38,7 +88,6 @@ const handleLogin = () => {
                 bodyData[i].tags = bodyData[i].tags.replace('[', '').replace(']','').split(',');
               }
               memoData.value = bodyData;
-              console.log(memoData.value);
             }
           });
         }
@@ -46,7 +95,7 @@ const handleLogin = () => {
     })
   };
 
-handleLogin();
+handleMemo("get");
 
 
 interface Memo {
@@ -76,13 +125,36 @@ function cancelEditing() {
 function saveMemo() {
   if (editingMemo.value) {
     const { index, ...updatedMemo } = editingMemo.value;
+    console.log(editingMemo.value.tags);
 
-    if (index !== undefined) {
+    if (index !== undefined) { // Update
+      updatedMemo.tags = Array.from(updatedMemo.tags);
       memoData.value[index] = updatedMemo;
-    } else {
+      handleMemoAdd(
+        "add",
+        authData.userId,
+        updatedMemo.memo_id,
+        updatedMemo.title,
+        updatedMemo.date,
+        updatedMemo.tags,
+        updatedMemo.content
+      );
+      window.location.reload();
+    } else { // Add
+      updatedMemo.tags = Array.from(updatedMemo.tags);
       memoData.value.push(updatedMemo);
+      handleMemoAdd(
+        "add",
+        authData.userId,
+        authData.userId + '_' + Math.round(Math.random() * 1000),
+        updatedMemo.title,
+        updatedMemo.date,
+        updatedMemo.tags,
+        updatedMemo.content
+      );
     }
     editingMemo.value = null;
+    window.location.reload();
   }
 }
 
@@ -104,6 +176,10 @@ function deleteMemo(index: number) {
 
 
 <template>
+  <div v-if="isLoading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
   <div class="page-container" v-if="!authData.isLogin">
     <h1>{{ t("title") }}</h1>
     <p>{{ t("homePage.description") }}</p>
@@ -123,8 +199,11 @@ function deleteMemo(index: number) {
       <div class="memo-content">
         <h2>{{ memo.title }}</h2>
         <h3>{{ memo.date }}</h3>
-        <h4>#{{ memo.tags.join(" #") }}</h4>
+        <div>
+            <h4 v-for="(tag, tagIndex) in memo.tags" :key="tagIndex" @click.stop="console.log(tag)">#{{ tag }}</h4>
+        </div>
         <p>{{ memo.content }}</p>
+        <p style="display: none;">{{ memo.memo_id }}</p>
       </div>
       <button class="delete-button" @click.stop="deleteMemo(index)">Delete</button>
     </div>
@@ -203,6 +282,11 @@ h4 {
   border-radius: 0.5rem;
   padding: 0.2rem;
   display: inline-block;
+  cursor: pointer;
+}
+
+h4L:hover {
+  color: sandybrown;
 }
 
 .modal {
@@ -316,4 +400,38 @@ h4 {
 .delete-button:hover {
   background: rgba(255, 0, 0, 0.5);
 }
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  color: white;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-left-color: white;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 </style>
