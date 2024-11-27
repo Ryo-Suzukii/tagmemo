@@ -11,7 +11,7 @@ const memoData = ref<Memo[]>([]);
 const isLoading = ref(false);
 
 const handleMemo = (mode: string) => {
-  const url = import.meta.env.VITE_API_BASE_URL + '/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=' + mode;
+  const url = 'https://6f5dgikzng.execute-api.ap-northeast-1.amazonaws.com/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=' + mode;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
@@ -27,7 +27,7 @@ const handleMemo = (mode: string) => {
 
   isLoading.value = true;
 
-  fetch(url, requestOptions)
+  fetch(url, { ...requestOptions, mode: 'no-cors' })
     .then(response => {
       if (response.status == 401) {
         console.log('error');
@@ -59,7 +59,7 @@ const handleMemo = (mode: string) => {
     tags: Array<string>,
     content: string
   ) => {
-  const url = import.meta.env.VITE_API_BASE_URL + '/live/dev-tagmemo-api-Function-Auth?user_id=' + userId + '&mode=' + mode + '&memo_id=' + memoId + '&title=' + title + '&date=' + date + '&tags=' + tags + '&content=' + content;
+  const url = 'https://6f5dgikzng.execute-api.ap-northeast-1.amazonaws.com/live/dev-tagmemo-api-Function-Auth?user_id=' + userId + '&mode=' + mode + '&memo_id=' + memoId + '&title=' + title + '&date=' + date + '&tags=' + tags + '&content=' + content;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
@@ -73,7 +73,7 @@ const handleMemo = (mode: string) => {
     redirect: 'follow' as RequestRedirect,
   };
 
-  fetch(url, requestOptions)
+  fetch(url, { ...requestOptions, mode: 'no-cors' })
     .then(response => {
       if (response.status == 401) {
         console.log('error');
@@ -95,7 +95,7 @@ const handleMemo = (mode: string) => {
   };
 
   const handleMemoDelete = (memoId: string) => {
-  const url = import.meta.env.VITE_API_BASE_URL + '/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=delete' + '&memo_id=' + memoId;
+  const url = 'https://6f5dgikzng.execute-api.ap-northeast-1.amazonaws.com/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=delete' + '&memo_id=' + memoId;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
@@ -109,7 +109,7 @@ const handleMemo = (mode: string) => {
     redirect: 'follow' as RequestRedirect,
   };
 
-  fetch(url, requestOptions)
+  fetch(url, { ...requestOptions, mode: 'no-cors' })
     .then(response => {
       if (response.status == 401) {
         console.log('error');

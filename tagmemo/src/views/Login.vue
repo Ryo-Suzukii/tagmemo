@@ -14,10 +14,10 @@ const handleLogin = () => {
   const passwordInput = document.querySelector('input[type="password"]') as HTMLInputElement;
   const email = emailInput.value;
   const password = passwordInput.value;
-  const url = import.meta.env.VITE_API_BASE_URL + '/live/dev-tagmemo-api-Function-Auth?mail_address=' + email + '&password=' + password + '&mode=login';
+  const url = 'https://6f5dgikzng.execute-api.ap-northeast-1.amazonaws.com/live/dev-tagmemo-api-Function-Auth?mail_address=' + email + '&password=' + password + '&mode=login';
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Accept", "*/*");
+  myHeaders.append("Accept", "/*");
   myHeaders.append("Host", "6f5dgikzng.execute-api.ap-northeast-1.amazonaws.com");
   myHeaders.append("Connection", "keep-alive");
   myHeaders.append("Access-Control-Allow-Origin", "*");
@@ -28,7 +28,7 @@ const handleLogin = () => {
     redirect: 'follow' as RequestRedirect,
   };
 
-  fetch(url, requestOptions)
+  fetch(url, { ...requestOptions, mode: 'no-cors' })    
     .then(response => {
       if (response.status == 401) {
         authData.isLogin = false;
