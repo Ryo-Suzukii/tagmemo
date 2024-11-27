@@ -72,6 +72,14 @@ Resources:
                 Action:
                   - dynamodb:*
                 Resource: "*"
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - bedrock:*
+                Resource: "*"
 
   ApiGateway:
     Type: AWS::ApiGateway::RestApi
@@ -159,6 +167,19 @@ Resources:
         Type: Api
         Properties:
           RestApiId: !Ref ApiGateway
+  
+  TagFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${EnvironmentPrefix}-${AppName}-Function-Tag
+      MemorySize: 1024
+      CodeUri: ./tagsrc/app
+      LoggingConfig:
+        LogFormat: JSON
+        SystemLogLevel: !Ref LogLevel
+        ApplicationLogLevel: !Ref LogLevel
+      Role: !GetAtt FunctionRole.Arn
+      AutoPublishAlias: live
 
   FunctionLogGroup:
     Type: AWS::Logs::LogGroup

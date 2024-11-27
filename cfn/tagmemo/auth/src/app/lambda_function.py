@@ -53,8 +53,8 @@ def check_auth_info(auth_data: dict[str, str]) -> bool:
     auth_requires = ["mail_address", "password", "mode"]
     memo_requires = ["user_id"]
     mode = auth_data.get("mode", "")
-    requires = auth_requires if mode in ["login", "register", "delete"] else memo_requires
-    if mode in ["login", "register", "delete"]:
+    requires = auth_requires if mode in ["login", "register"] else memo_requires
+    if mode in ["login", "register"]:
         mail_address = auth_data.get("mail_address", "")
         email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
         if not re.match(email_pattern, mail_address):
@@ -103,10 +103,13 @@ def register_(
 def delete_(
     params: dict[str, str],
 ) -> dict[str, str | int]:
-    return {
-        "statusCode": 200,
-        "body": json.dumps({"message": f"{params.get('mail_address')} is deleted."}),
-    }
+    return dynamodb.delete_item(
+        TableName=f"{Env.ENV}-tagmemo-api-Memo-Data",
+        Key={
+            "user_id": {"S": params["user_id"]},
+            "memo_id": {"S": params["memo_id"]},
+        },
+    )
 
 
 def set_memo_data(
@@ -138,6 +141,17 @@ def get_memo_data(
     return [{key: td.deserialize(value) for key, value in item.items()} for item in data["Items"]]
 
 
+def lambda_invoke(
+    user_id: str,
+    memo_id: str,
+) -> None:
+    boto3.client("lambda").invoke(
+        FunctionName=f"{Env.ENV}-tagmemo-api-Function-Tag",
+        InvocationType="Event",
+        Payload=json.dumps({"mode": "delete", "user_id": user_id, "memo_id": memo_id}),
+    )
+
+
 # --------------------------------------------------------------------------------------------------
 # Handler
 # --------------------------------------------------------------------------------------------------
@@ -161,7 +175,11 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
         return register_(auth_data, params)
 
     if params and params["mode"] == "delete":
-        return delete_(params)
+        delete_(params)
+        return {
+            "statusCode": 200,
+            "body": json.dumps({"message": f"{params.get('memo_id')} is deleted."}),
+        }
 
     if params and params["mode"] == "add":
         memo_data = set_memo_data(params)
