@@ -14,7 +14,7 @@ const handleLogin = () => {
   const passwordInput = document.querySelector('input[type="password"]') as HTMLInputElement;
   const email = emailInput.value;
   const password = passwordInput.value;
-  const url = 'api/live/dev-tagmemo-api-Function-Auth?mail_address=' + email + '&password=' + password + '&mode=login';
+  const url = import.meta.env.VITE_API_BASE_URL + '/live/dev-tagmemo-api-Function-Auth?mail_address=' + email + '&password=' + password + '&mode=login';
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");

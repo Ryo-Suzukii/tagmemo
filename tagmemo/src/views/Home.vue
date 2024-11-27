@@ -11,7 +11,7 @@ const memoData = ref<Memo[]>([]);
 const isLoading = ref(false);
 
 const handleMemo = (mode: string) => {
-  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=' + mode;
+  const url = import.meta.env.VITE_API_BASE_URL + '/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=' + mode;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
@@ -59,7 +59,7 @@ const handleMemo = (mode: string) => {
     tags: Array<string>,
     content: string
   ) => {
-  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + userId + '&mode=' + mode + '&memo_id=' + memoId + '&title=' + title + '&date=' + date + '&tags=' + tags + '&content=' + content;
+  const url = import.meta.env.VITE_API_BASE_URL + '/live/dev-tagmemo-api-Function-Auth?user_id=' + userId + '&mode=' + mode + '&memo_id=' + memoId + '&title=' + title + '&date=' + date + '&tags=' + tags + '&content=' + content;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
@@ -95,7 +95,7 @@ const handleMemo = (mode: string) => {
   };
 
   const handleMemoDelete = (memoId: string) => {
-  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=delete' + '&memo_id=' + memoId;
+  const url = import.meta.env.VITE_API_BASE_URL + '/live/dev-tagmemo-api-Function-Auth?user_id=' + authData.userId + '&mode=delete' + '&memo_id=' + memoId;
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");

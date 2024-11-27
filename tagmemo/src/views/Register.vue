@@ -21,7 +21,7 @@ const handleRegister = () => {
     alert('Password does not match');
     return;
   }
-  const url = 'api/live/dev-tagmemo-api-Function-Auth?user_id=' + userName + '&mail_address=' + email + '&password=' + password + '&color=' + userColor + '&mode=register';
+  const url = import.meta.env.VITE_API_BASE_URL + '/live/dev-tagmemo-api-Function-Auth?user_id=' + userName + '&mail_address=' + email + '&password=' + password + '&color=' + userColor + '&mode=register';
   console.log(url);
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
